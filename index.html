@@ -362,24 +362,20 @@ fetch("http://localhost:1337/api/first-banners?populate=*")
 
     for (const category in categories) {
 
+  const categoryContainer = document.createElement("div");
+  categoryContainer.classList.add("container-fluid", "pt-5", "pb-3");
 
-        
+  // Create a heading for the category
+  const categoryHeading = document.createElement("h2");
+  categoryHeading.classList.add("section-title", "position-relative", "text-uppercase", "mx-xl-5", "mb-4");
+  categoryHeading.textContent = category;
 
-      const categoryContainer = document.createElement("div");
+  // Create a row for the products
+  const productRow = document.createElement("div");
+  productRow.classList.add("row", "px-xl-5");
 
-      categoryContainer.classList.add("container-fluid", "pt-5", "pb-3");
-
-      // Create a heading for the category
-      const categoryHeading = document.createElement("h2");
-      categoryHeading.classList.add("section-title", "position-relative", "text-uppercase", "mx-xl-5", "mb-4");
-      categoryHeading.textContent = category;
-
-      // Create a row for the products
-      const productRow = document.createElement("div");
-      productRow.classList.add("row", "px-xl-5");
-
-      // Iterate over the products of the category
-      categories[category].products.forEach(product => {
+  // Iterate over the products of the category
+categories[category].products.forEach(product => {
         // Create a product element
         const productElement = document.createElement("div");
         productElement.classList.add("col-lg-2", "col-md-3", "col-sm-5", "pb-0");
@@ -396,27 +392,92 @@ fetch("http://localhost:1337/api/first-banners?populate=*")
         const productPrice = document.createElement("h5");
         productPrice.textContent = product.price;
 
-        // Append the product name, image, and price to the product element
-       
+        // Create the add to cart button
+          const addToCartButton = document.createElement("button");
+          addToCartButton.classList.add("btn", "btn-primary");
+          addToCartButton.textContent = "Add to Cart";
+          addToCartButton.addEventListener("click", () => {
+    // Create the modal
+    const modal = document.createElement("div");
+    modal.classList.add("modal", "fade");
+    modal.tabIndex = "-1";
+    modal.role = "dialog";
+    modal.innerHTML = `
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add to Cart</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Append the modal to the document body
+    document.body.appendChild(modal);
+
+    // Show the modal
+    $(modal).modal("show");
+
+    // Remove the modal when it is hidden
+    $(modal).on("hidden.bs.modal", () => {
+      modal.remove();
+    });
+  });
+
+        // Append the product name, image, price, and add to cart button to the product element
         productElement.appendChild(productImage);
         productElement.appendChild(productName);
         productElement.appendChild(productPrice);
+        productElement.appendChild(addToCartButton);
 
-            // Append the product element to the product row
-            productRow.appendChild(productElement);
-          });
+        // Append the product element to the product row
+        productRow.appendChild(productElement);
+    });
 
-          // Append the category heading and product row to the category container
-          categoryContainer.appendChild(categoryHeading);
-          categoryContainer.appendChild(productRow);
+  // Append the category heading and product row to the category container
+  categoryContainer.appendChild(categoryHeading);
+  categoryContainer.appendChild(productRow);
 
-          // Append the category container to the webpage
-          document.getElementById("products").appendChild(categoryContainer);
-        }
+  // Append the category container to the webpage
+  document.getElementById("products").appendChild(categoryContainer);
+}
+
+// Function to add a product to the cart
+function addProductToCart(product) {
+  console.log("Adding product to cart:", product);
+  // Add your implementation here to store the product in the cart
+}
+
 
 });
-
 </script>
+
+
+
+
 </body>
 
 </html>
